@@ -1,50 +1,48 @@
 package org.webpartners.meigic.views;
 
+import org.webpartners.meigic.presenters.MeigicPresenter;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import org.webpartners.meigic.presenters.MeigicPresenter;
-
 /**
  * Project: Meigic
- *
+ * <p>
  * Created by Jorge Garrido Oval on 20/5/16.
  * Copyright © Webpartners 2016
  */
-public abstract class MeigicViewGroup<P extends MeigicPresenter, V extends MeigicView> extends FrameLayout {
+public abstract class MeigicViewGroup <P extends MeigicPresenter> extends FrameLayout {
 
     protected P presenter;
 
     public MeigicViewGroup(Context context) {
-        super(context);
-        presenter = this.initPresenter();
-        this.initView();
+        this(context, null);
     }
 
     public MeigicViewGroup(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        presenter = this.initPresenter();
-        this.initView();
+        this(context, attrs, 0);
     }
 
     public MeigicViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        presenter = this.initPresenter();
-        this.initView();
+        this.initializeUI();
+        presenter = this.initializePresenter();
     }
 
-    @Override protected void onAttachedToWindow() {
+    @Override
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        presenter.setup();
+        this.presenter.initialize();
     }
 
-    @Override protected void onDetachedFromWindow() {
+    @Override
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        presenter = null;
+        presenter.destroy();
     }
 
-    protected abstract P initPresenter();
+    protected abstract P initializePresenter();
 
-    protected abstract void initView();
+    protected abstract void initializeUI();
 }
